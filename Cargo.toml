@@ -1,0 +1,10 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/core",
+"crates/examples/love_letter",
+    "crates/examples/splendor",
+    "crates/examples/simple_wars",
+    "crates/examples/arena_combat",
+    "crates/examples/poker",
+]

@@ -1,0 +1,13 @@
+[package]
+name = "telic"
+version = "0.1.0"
+edition = "2024"
+description = "Engine-agnostic game AI framework: command trees, utility scoring, coordinated assignment, and TrueSkill evaluation."
+license = "Apache-2.0"
+repository = "https://github.com/Goblinlordx/telic"
+readme = "../../README.md"
+keywords = ["ai", "game-ai", "utility-ai", "goap", "game-dev"]
+categories = ["game-development", "algorithms"]
+
+[dependencies]
+skillratings = "0.29"
