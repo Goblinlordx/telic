@@ -1,0 +1,41 @@
+name: Release
+
+# Triggered when a GitHub Release is published. The release tag (e.g. `v0.1.0`)
+# is validated against `crates/core/Cargo.toml`'s `version` before publishing.
+
+on:
+  release:
+    types: [published]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    name: publish to crates.io
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Verify tag matches Cargo.toml version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          TAG="${TAG#v}"
+          CRATE_VERSION=$(cargo metadata --no-deps --format-version 1 \
+            | jq -r '.packages[] | select(.name == "telic") | .version')
+          echo "Tag version:   $TAG"
+          echo "Cargo version: $CRATE_VERSION"
+          if [ "$TAG" != "$CRATE_VERSION" ]; then
+            echo "::error::Tag $TAG does not match crates/core/Cargo.toml version $CRATE_VERSION" >&2
+            exit 1
+          fi
+
+      - name: Run the full test suite
+        run: cargo test --workspace
+
+      - name: Publish telic to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p telic

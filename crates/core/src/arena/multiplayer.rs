@@ -5,8 +5,7 @@ use skillratings::MultiTeamOutcome;
 use skillratings::trueskill::{TrueSkillConfig, TrueSkillRating, trueskill_multi_team};
 
 use crate::arena::agent::GameAgent;
-use crate::arena::command_tree::CommandTree;
-use crate::arena::game::{GameCommand, GameOutcome, GameState, GameView, PlayerIndex};
+use crate::arena::game::{GameCommand, GameOutcome, GameState, GameView};
 use crate::arena::CommandProvider;
 
 /// An agent factory — creates fresh agent instances by type name.
@@ -233,7 +232,7 @@ impl<V: GameView, C: GameCommand> MultiPlayerArena<V, C> {
         let max_turns = self.max_turns;
         let ppg = self.players_per_game;
 
-        for game_idx in 0..self.num_games {
+        for _game_idx in 0..self.num_games {
             // Sample a composition: pick type for each seat
             let mut seat_types: Vec<usize> = Vec::with_capacity(ppg);
             for i in 0..ppg {
