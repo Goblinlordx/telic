@@ -61,14 +61,19 @@ report.print_summary();
 
 ## Why a command tree?
 
-Most game-AI patterns have the agent *propose* a command, and the game
-*reject* it if invalid. In practice, scoring-based agents misfire — they
-pick a unit that already moved, aim at an enemy out of range, try to
-spend gold they don't have. The rejected command then either breaks the
-game loop or wastes retries.
+Good game-AI systems have long enforced valid-action-only decisions —
+`legal_moves()` in chess engines, `legal_actions()` in OpenSpiel,
+preconditions on behavior-tree nodes and GOAP actions, action-masking
+in RL policies. Where many hand-rolled custom-game AIs go wrong is
+propose-and-hope: the agent returns any command; the game rejects it if
+invalid. Scoring-based agents are especially prone to this — they
+cheerfully score "move unit X" without noticing X already moved, or
+"attack enemy Y" when Y is out of range. The rejected command either
+breaks the game loop or wastes retries.
 
-`telic` flips this. The `CommandProvider` enumerates every valid command
-as a tree:
+`telic` treats the valid-action set as a first-class framework
+primitive, in the tradition of OpenSpiel. The `CommandProvider`
+enumerates every valid command as a tree:
 
 ```
 Layer("actions")
